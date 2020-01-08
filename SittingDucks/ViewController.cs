@@ -11,11 +11,23 @@ namespace SittingDucks
         {
         }
 
+        int buttonClickCounter;
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
+            labelCounter.StringValue = "Not clicked";
+
+            buttonClickCounter = 0;
             // Do any additional setup after loading the view.
+        }
+
+        partial void counterButton(NSObject sender)
+        {
+            buttonClickCounter++;
+            labelCounter.StringValue = string.Format("Number of clicks: {0}", buttonClickCounter);
+            MainClass.doSomeThing();
         }
 
         public override NSObject RepresentedObject
