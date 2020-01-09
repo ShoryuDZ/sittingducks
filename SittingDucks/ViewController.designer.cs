@@ -13,16 +13,56 @@ namespace SittingDucks
 	partial class ViewController
 	{
 		[Outlet]
-		AppKit.NSTextField labelCounter { get; set; }
+		AppKit.NSTextField accountField { get; set; }
 
-		[Action ("counterButton:")]
-		partial void counterButton (Foundation.NSObject sender);
+		[Outlet]
+		AppKit.NSTextField accountHolder { get; set; }
+
+		[Outlet]
+		AppKit.NSSecureTextField passwordField { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField passwordHolder { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField websiteField { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField websiteHolder { get; set; }
+
+		[Action ("newAccountButton:")]
+		partial void newAccountButton (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (labelCounter != null) {
-				labelCounter.Dispose ();
-				labelCounter = null;
+			if (websiteField != null) {
+				websiteField.Dispose ();
+				websiteField = null;
+			}
+
+			if (accountField != null) {
+				accountField.Dispose ();
+				accountField = null;
+			}
+
+			if (passwordField != null) {
+				passwordField.Dispose ();
+				passwordField = null;
+			}
+
+			if (websiteHolder != null) {
+				websiteHolder.Dispose ();
+				websiteHolder = null;
+			}
+
+			if (accountHolder != null) {
+				accountHolder.Dispose ();
+				accountHolder = null;
+			}
+
+			if (passwordHolder != null) {
+				passwordHolder.Dispose ();
+				passwordHolder = null;
 			}
 		}
 	}

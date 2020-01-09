@@ -17,17 +17,17 @@ namespace SittingDucks
         {
             base.ViewDidLoad();
 
-            labelCounter.StringValue = "Not clicked";
-
-            buttonClickCounter = 0;
+            websiteHolder.StringValue = string.Empty;
+            accountHolder.StringValue = string.Empty;
+            passwordHolder.StringValue = string.Empty;
             // Do any additional setup after loading the view.
         }
 
-        partial void counterButton(NSObject sender)
+        partial void newAccountButton(NSObject sender)
         {
-            buttonClickCounter++;
-            labelCounter.StringValue = string.Format("Number of clicks: {0}", buttonClickCounter);
-            MainClass.doSomeThing();
+            websiteHolder.StringValue += websiteField.StringValue + '\n';
+            accountHolder.StringValue += accountField.StringValue + '\n';
+            passwordHolder.StringValue += passwordField.StringValue + '\n';
         }
 
         public override NSObject RepresentedObject

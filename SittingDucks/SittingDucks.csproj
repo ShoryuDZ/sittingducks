@@ -75,9 +75,18 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="NewRecordView.cs" />
+    <Compile Include="NewRecordViewController.cs" />
+    <Compile Include="NewRecordView.designer.cs">
+      <DependentUpon>NewRecordView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewRecordViewController.designer.cs">
+      <DependentUpon>NewRecordViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
+    <InterfaceDefinition Include="NewRecordView.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
