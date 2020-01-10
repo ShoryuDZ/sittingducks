@@ -16,30 +16,19 @@ namespace SittingDucks
 		AppKit.NSTextField accountField { get; set; }
 
 		[Outlet]
-		AppKit.NSTextField accountHolder { get; set; }
-
-		[Outlet]
 		AppKit.NSSecureTextField passwordField { get; set; }
 
 		[Outlet]
-		AppKit.NSTextField passwordHolder { get; set; }
+		AppKit.NSTableView recordTable { get; set; }
 
 		[Outlet]
 		AppKit.NSTextField websiteField { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField websiteHolder { get; set; }
 
 		[Action ("newAccountButton:")]
 		partial void newAccountButton (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (websiteField != null) {
-				websiteField.Dispose ();
-				websiteField = null;
-			}
-
 			if (accountField != null) {
 				accountField.Dispose ();
 				accountField = null;
@@ -50,19 +39,14 @@ namespace SittingDucks
 				passwordField = null;
 			}
 
-			if (websiteHolder != null) {
-				websiteHolder.Dispose ();
-				websiteHolder = null;
+			if (recordTable != null) {
+				recordTable.Dispose ();
+				recordTable = null;
 			}
 
-			if (accountHolder != null) {
-				accountHolder.Dispose ();
-				accountHolder = null;
-			}
-
-			if (passwordHolder != null) {
-				passwordHolder.Dispose ();
-				passwordHolder = null;
+			if (websiteField != null) {
+				websiteField.Dispose ();
+				websiteField = null;
 			}
 		}
 	}

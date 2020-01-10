@@ -2,6 +2,7 @@
 
 using AppKit;
 using Foundation;
+using System.Linq;
 
 namespace SittingDucks
 {
@@ -11,23 +12,31 @@ namespace SittingDucks
         {
         }
 
-        int buttonClickCounter;
+        public RecordTableDataSource DataSource { get; set; }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            websiteHolder.StringValue = string.Empty;
-            accountHolder.StringValue = string.Empty;
-            passwordHolder.StringValue = string.Empty;
-            // Do any additional setup after loading the view.
+            recordTable.TableColumns().ElementAt(0).HeaderCell.StringValue = "Website";
+            recordTable.TableColumns().ElementAt(1).HeaderCell.StringValue = "Account";
+            recordTable.TableColumns().ElementAt(2).HeaderCell.StringValue = "Password";
+
+            DataSource = new RecordTableDataSource();
         }
 
         partial void newAccountButton(NSObject sender)
         {
-            websiteHolder.StringValue += websiteField.StringValue + '\n';
-            accountHolder.StringValue += accountField.StringValue + '\n';
-            passwordHolder.StringValue += passwordField.StringValue + '\n';
+            DataSource.Records.Add(new Record(websiteField.StringValue, accountField.StringValue, passwordField.StringValue));
+
+            recordTable.DataSource = DataSource;
+            recordTable.Delegate = new RecordTableDelegate(DataSource);
+
+            recordTable.ReloadData();
+
+            websiteField.StringValue = String.Empty;
+            accountField.StringValue = String.Empty;
+            passwordField.StringValue = String.Empty;
         }
 
         public override NSObject RepresentedObject

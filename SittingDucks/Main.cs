@@ -9,10 +9,5 @@ namespace SittingDucks
             NSApplication.Init();
             NSApplication.Main(args);
         }
-
-        public static void doSomeThing()
-        {
-            System.Console.WriteLine("Thing completed");
-        }
     }
 }
