@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace SittingDucks
 {
     public class Record

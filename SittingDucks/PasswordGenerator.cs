@@ -7,12 +7,11 @@ namespace SittingDucks
     public static class PasswordGenerator
     {
         public static RNGCryptoServiceProvider RandomNumbers = new RNGCryptoServiceProvider();
+        public static string[] CharacterSet = { "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz", "0123456789", "!@#$%^&*-`~,.;<>?" };
 
         public static string GeneratePassword()
         {
             const int length = 16;
-
-            var characterSet = new [] { "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz", "0123456789", "!@#$%^&*-`~,.;<>?" };
          
             var bytes = new byte[length * 8];
             RandomNumbers.GetBytes(bytes);
@@ -23,7 +22,7 @@ namespace SittingDucks
             {
                 var innerCounter = 0;
 
-                foreach (var characterGroup in characterSet)
+                foreach (var characterGroup in CharacterSet)
                 {
                     var index = (outerCounter * 4) + innerCounter;
                     ulong value = BitConverter.ToUInt64(bytes, index * 8);
