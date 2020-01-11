@@ -78,6 +78,7 @@
     <Compile Include="Record.cs" />
     <Compile Include="RecordTableDataSource.cs" />
     <Compile Include="RecordTableDelegate.cs" />
+    <Compile Include="PasswordGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />

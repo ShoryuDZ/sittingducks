@@ -39,6 +39,11 @@ namespace SittingDucks
             passwordField.StringValue = String.Empty;
         }
 
+        partial void GeneratePasswordButton(NSObject sender)
+        {
+            passwordField.StringValue = PasswordGenerator.GeneratePassword();
+        }
+
         public override NSObject RepresentedObject
         {
             get

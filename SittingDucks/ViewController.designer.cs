@@ -24,6 +24,9 @@ namespace SittingDucks
 		[Outlet]
 		AppKit.NSTextField websiteField { get; set; }
 
+		[Action ("GeneratePasswordButton:")]
+		partial void GeneratePasswordButton (Foundation.NSObject sender);
+
 		[Action ("newAccountButton:")]
 		partial void newAccountButton (Foundation.NSObject sender);
 		
