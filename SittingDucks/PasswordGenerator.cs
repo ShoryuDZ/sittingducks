@@ -17,7 +17,7 @@ namespace SittingDucks
             RandomNumbers.GetBytes(bytes);
             var result = new char[length];
 
-            //Creating four groups, each containing one character from each of the four groups
+            //Creating four groups, each group containing one character from each part of the set
             for (var outerCounter = 0;  outerCounter < 4; outerCounter++)
             {
                 var innerCounter = 0;
@@ -33,6 +33,24 @@ namespace SittingDucks
 
             //Shuffling the string before returning
             return new string(result.OrderBy(x => Guid.NewGuid()).ToArray());
+        }
+
+        public static bool IsSecure(string potentialPassword)
+        {
+            foreach (var characterGroup in CharacterSet)
+            {
+                if (potentialPassword.ToArray().Count(character => characterGroup.ToArray().Contains(character)) <= 1)
+                {
+                    return false;
+                }
+            }
+
+            if (potentialPassword.Length < 8)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

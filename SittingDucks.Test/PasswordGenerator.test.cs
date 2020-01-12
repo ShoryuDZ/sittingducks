@@ -23,5 +23,18 @@ namespace SittingDucks.Test
         { 
             Assert.That(generatedPassword.Length.Equals(16));
         }
+
+        [TestCase("password", false)]
+        [TestCase("lotsandlotsoflettersinthispassword", false)]
+        [TestCase("password1234", false)]
+        [TestCase("password1234!", false)]
+        [TestCase("Pa$sword1234!", false)]
+        [TestCase("PA$$word1234!", true)]
+        [TestCase("Pw1!", false)]
+        [TestCase("ABcd12!@", true)]
+        public void IsSecurePassword(string potentialPassword, bool isStrong)
+        {
+            Assert.AreEqual(PasswordGenerator.IsSecure(potentialPassword), isStrong);
+        }
 	}
 }

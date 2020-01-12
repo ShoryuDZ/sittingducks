@@ -3,6 +3,7 @@
 using AppKit;
 using Foundation;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SittingDucks
 {
@@ -14,6 +15,8 @@ namespace SittingDucks
 
         public RecordTableDataSource DataSource { get; set; }
 
+        public NSTextField[] NSTextFields { get; set; }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -23,20 +26,47 @@ namespace SittingDucks
             recordTable.TableColumns().ElementAt(2).HeaderCell.StringValue = "Password";
 
             DataSource = new RecordTableDataSource();
+
+            NSTextFields = new NSTextField[] { websiteField, accountField, passwordField };
         }
 
         partial void newAccountButton(NSObject sender)
         {
-            DataSource.Records.Add(new Record(websiteField.StringValue, accountField.StringValue, passwordField.StringValue));
+            if (websiteField.StringValue != string.Empty && accountField.StringValue != string.Empty && PasswordGenerator.IsSecure(passwordField.StringValue))
+            {
+                DataSource.Records.Add(new Record(websiteField.StringValue, accountField.StringValue, passwordField.StringValue));
 
-            recordTable.DataSource = DataSource;
-            recordTable.Delegate = new RecordTableDelegate(DataSource);
+                recordTable.DataSource = DataSource;
+                recordTable.Delegate = new RecordTableDelegate(DataSource);
 
-            recordTable.ReloadData();
+                recordTable.ReloadData();
 
-            websiteField.StringValue = String.Empty;
-            accountField.StringValue = String.Empty;
-            passwordField.StringValue = String.Empty;
+                foreach (var textField in NSTextFields)
+                {
+                    textField.StringValue = string.Empty;
+                    textField.BackgroundColor = NSColor.Clear;
+                }
+            }
+
+            else
+            {
+                foreach (var textField in NSTextFields)
+                {
+                    if (textField.StringValue == string.Empty)
+                    {
+                        textField.BackgroundColor = NSColor.Red;
+                    }
+                    else
+                    {
+                        textField.BackgroundColor = NSColor.Clear;
+                    }
+                }
+
+                if (passwordField.StringValue != String.Empty && !PasswordGenerator.IsSecure(passwordField.StringValue))
+                {
+                    passwordField.BackgroundColor = NSColor.Yellow;
+                }
+            }
         }
 
         partial void GeneratePasswordButton(NSObject sender)
