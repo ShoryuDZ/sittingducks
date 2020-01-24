@@ -45,11 +45,6 @@ namespace SittingDucks
                 }
             }
 
-            if (potentialPassword.Length < 8)
-            {
-                return false;
-            }
-
             return true;
         }
     }

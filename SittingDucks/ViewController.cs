@@ -34,18 +34,7 @@ namespace SittingDucks
         {
             if (websiteField.StringValue != string.Empty && accountField.StringValue != string.Empty && PasswordGenerator.IsSecure(passwordField.StringValue))
             {
-                DataSource.Records.Add(new Record(websiteField.StringValue, accountField.StringValue, passwordField.StringValue));
-
-                recordTable.DataSource = DataSource;
-                recordTable.Delegate = new RecordTableDelegate(DataSource);
-
-                recordTable.ReloadData();
-
-                foreach (var textField in NSTextFields)
-                {
-                    textField.StringValue = string.Empty;
-                    textField.BackgroundColor = NSColor.Clear;
-                }
+                AddNewAccount(websiteField.StringValue, accountField.StringValue, passwordField.StringValue);
             }
 
             else
@@ -64,8 +53,41 @@ namespace SittingDucks
 
                 if (passwordField.StringValue != String.Empty && !PasswordGenerator.IsSecure(passwordField.StringValue))
                 {
-                    passwordField.BackgroundColor = NSColor.Yellow;
+                    var alert = new NSAlert()
+                    {
+                        AlertStyle = NSAlertStyle.Informational,
+                        InformativeText = "Your password is insecure. Secure passwords contain at least 2 of each: special character, number, lowercase character, uppercase character.",
+                        MessageText = "Insecure Password",
+                    };
+                    alert.AddButton("OK");
+                    alert.AddButton("Ignore");
+                    var result = alert.RunModal();
+
+                    if (result == 1000)
+                    {
+                        passwordField.BackgroundColor = NSColor.Yellow;
+                    }
+                    if (result == 1001)
+                    {
+                        AddNewAccount(websiteField.StringValue, accountField.StringValue, passwordField.StringValue);
+                    }
                 }
+            }
+        }
+
+        void AddNewAccount(string website, string account, string password)
+        {
+            DataSource.Records.Add(new Record(website, account, password));
+
+            recordTable.DataSource = DataSource;
+            recordTable.Delegate = new RecordTableDelegate(DataSource);
+
+            recordTable.ReloadData();
+
+            foreach (var textField in NSTextFields)
+            {
+                textField.StringValue = string.Empty;
+                textField.BackgroundColor = NSColor.Clear;
             }
         }
 
