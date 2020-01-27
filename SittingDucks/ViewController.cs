@@ -3,7 +3,10 @@
 using AppKit;
 using Foundation;
 using System.Linq;
-using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using Mono.Data.Sqlite;
+using System.Threading.Tasks;
 
 namespace SittingDucks
 {
@@ -17,6 +20,8 @@ namespace SittingDucks
 
         public NSTextField[] NSTextFields { get; set; }
 
+        private SqliteConnection DatabaseConnection = null;
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -28,6 +33,8 @@ namespace SittingDucks
             DataSource = new RecordTableDataSource();
 
             NSTextFields = new NSTextField[] { websiteField, accountField, passwordField };
+
+            DatabaseConnection = GetDatabaseConnection();
         }
 
         partial void newAccountButton(NSObject sender)
@@ -94,6 +101,43 @@ namespace SittingDucks
         partial void GeneratePasswordButton(NSObject sender)
         {
             passwordField.StringValue = PasswordGenerator.GeneratePassword();
+        }
+
+        private SqliteConnection GetDatabaseConnection()
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string folder = Path.Combine(appData, "SittingDucks");
+            string database = Path.Combine(folder, "database.db3");
+
+            // Create the database if it doesn't already exist
+            bool exists = File.Exists(database);
+            if (!exists)
+            {
+                DirectoryInfo directoryInfo = Directory.CreateDirectory(folder);
+                SqliteConnection.CreateFile(database);
+            }
+
+            // Create connection to the database
+            var conn = new SqliteConnection("Data Source=" + database);
+
+            // Set the structure of the database
+            if (!exists)
+            {
+                var commands = new[] {"CREATE TABLE Data (ID TEXT, Website TEXT, Account TEXT, Password TEXT)"};
+                conn.Open();
+                foreach (var cmd in commands)
+                {
+                    using (var c = conn.CreateCommand())
+                    {
+                        c.CommandText = cmd;
+                        c.CommandType = CommandType.Text;
+                        c.ExecuteNonQuery();
+                    }
+                }
+                conn.Close();
+            }
+
+            return conn;
         }
 
         public override NSObject RepresentedObject

@@ -9,6 +9,7 @@ namespace SittingDucks
             this.Website = website;
             this.AccountName = accountName;
             this.Password = password;
+            this.ID = Guid.NewGuid();
         }
 
         public Record() { }
@@ -16,5 +17,6 @@ namespace SittingDucks
         public string Website { get; set; }
         public string AccountName { get; set; }
         public string Password { get; set; }
+        public Guid ID { get; set; }
     }
 }
