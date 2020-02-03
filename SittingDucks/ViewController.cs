@@ -84,7 +84,7 @@ namespace SittingDucks
 
         void AddNewAccount(string website, string account, string password)
         {
-            DataSource.Records.Add(new Record(website, account, password));
+            DataSource.Records.Add(new Record(website, account, password, DatabaseConnection));
 
             recordTable.DataSource = DataSource;
             recordTable.Delegate = new RecordTableDelegate(DataSource);
@@ -151,6 +151,14 @@ namespace SittingDucks
                 base.RepresentedObject = value;
                 // Update the view, if already loaded.
             }
+        }
+
+        public override void AwakeFromNib()
+        {
+            base.AwakeFromNib();
+
+            // Get access to database
+            DatabaseConnection = GetDatabaseConnection();
         }
     }
 }
