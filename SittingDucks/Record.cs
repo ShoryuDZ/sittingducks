@@ -1,18 +1,30 @@
 ﻿using System;
+using System.Data;
 using Mono.Data.Sqlite;
 
 namespace SittingDucks
 {
     public class Record
     {
-        public Record(string website, string accountName, string password, SqliteConnection connection)
+        public Record(string website, string accountName, string password, SqliteConnection connection, Guid id = default(Guid), bool isSaved = true)
         {
             this.Website = website;
             this.AccountName = accountName;
             this.Password = password;
-            this.ID = Guid.NewGuid();
 
-            SaveRecord(connection);
+            if(id == default(Guid))
+            {
+                this.ID = Guid.NewGuid();
+            }
+            else
+            {
+                this.ID = id;
+            }
+
+            if (isSaved)
+            {
+                SaveRecord(connection);
+            }
         }
 
         public Record() { }
@@ -22,8 +34,15 @@ namespace SittingDucks
             // Clear last connection to prevent circular call to update
             _conn = null;
 
+            bool shouldClose = false;
+
+            if (connection.State != ConnectionState.Open)
+            {
+                shouldClose = true;
+                connection.Open();
+            }
+
             // Execute query
-            connection.Open();
             using (var command = connection.CreateCommand())
             {
                 // Create new command
@@ -38,7 +57,11 @@ namespace SittingDucks
                 // Write to database
                 command.ExecuteNonQuery();
             }
-            connection.Close();
+
+            if (shouldClose)
+            {
+                connection.Close();
+            }
 
             //Save connection
             _conn = connection;

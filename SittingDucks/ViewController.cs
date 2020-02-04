@@ -6,7 +6,6 @@ using System.Linq;
 using System.Data;
 using System.IO;
 using Mono.Data.Sqlite;
-using System.Threading.Tasks;
 
 namespace SittingDucks
 {
@@ -26,15 +25,16 @@ namespace SittingDucks
         {
             base.ViewDidLoad();
 
+            DatabaseConnection = GetDatabaseConnection();
+
             recordTable.TableColumns().ElementAt(0).HeaderCell.StringValue = "Website";
             recordTable.TableColumns().ElementAt(1).HeaderCell.StringValue = "Account";
             recordTable.TableColumns().ElementAt(2).HeaderCell.StringValue = "Password";
 
-            DataSource = new RecordTableDataSource();
-
+            DataSource = new RecordTableDataSource(DatabaseConnection);
             NSTextFields = new NSTextField[] { websiteField, accountField, passwordField };
 
-            DatabaseConnection = GetDatabaseConnection();
+            PushView();
         }
 
         partial void newAccountButton(NSObject sender)
@@ -86,16 +86,7 @@ namespace SittingDucks
         {
             DataSource.Records.Add(new Record(website, account, password, DatabaseConnection));
 
-            recordTable.DataSource = DataSource;
-            recordTable.Delegate = new RecordTableDelegate(DataSource);
-
-            recordTable.ReloadData();
-
-            foreach (var textField in NSTextFields)
-            {
-                textField.StringValue = string.Empty;
-                textField.BackgroundColor = NSColor.Clear;
-            }
+            PushView();
         }
 
         partial void GeneratePasswordButton(NSObject sender)
@@ -138,6 +129,20 @@ namespace SittingDucks
             }
 
             return conn;
+        }
+
+        public void PushView()
+        {
+            recordTable.DataSource = DataSource;
+            recordTable.Delegate = new RecordTableDelegate(DataSource);
+
+            recordTable.ReloadData();
+
+            foreach (var textField in NSTextFields)
+            {
+                textField.StringValue = string.Empty;
+                textField.BackgroundColor = NSColor.Clear;
+            }
         }
 
         public override NSObject RepresentedObject
