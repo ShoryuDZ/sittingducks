@@ -31,16 +31,9 @@ namespace SittingDucks
 
         private void SaveRecord(SqliteConnection connection)
         {
-            // Clear last connection to prevent circular call to update
-            _conn = null;
+            bool shouldClose;
 
-            bool shouldClose = false;
-
-            if (connection.State != ConnectionState.Open)
-            {
-                shouldClose = true;
-                connection.Open();
-            }
+            (_conn, shouldClose) = new SqliteManager().OpenConnection(connection);
 
             // Execute query
             using (var command = connection.CreateCommand())
@@ -58,13 +51,7 @@ namespace SittingDucks
                 command.ExecuteNonQuery();
             }
 
-            if (shouldClose)
-            {
-                connection.Close();
-            }
-
-            //Save connection
-            _conn = connection;
+            _conn = new SqliteManager().CloseConnection(shouldClose, connection);
         }
 
         public string Website { get; set; }

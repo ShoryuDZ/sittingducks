@@ -90,6 +90,7 @@
     <Compile Include="RecordTableDataSource.cs" />
     <Compile Include="RecordTableDelegate.cs" />
     <Compile Include="PasswordGenerator.cs" />
+    <Compile Include="SqliteManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using AppKit;
 using Mono.Data.Sqlite;
@@ -17,17 +16,9 @@ namespace SittingDucks
         public RecordTableDataSource(SqliteConnection connection)
         {
             Records = new List<Record>();
+            bool shouldClose;
 
-            // Clear last connection to prevent circular call to update
-            _conn = null;
-
-            bool shouldClose = false;
-
-            if (connection.State != ConnectionState.Open)
-            {
-                shouldClose = true;
-                connection.Open();
-            }
+            (_conn, shouldClose) = new SqliteManager().OpenConnection(connection);
 
             // Execute query
             using (var command = connection.CreateCommand())
@@ -56,13 +47,7 @@ namespace SittingDucks
                 }
             }
 
-            if (shouldClose)
-            {
-                connection.Close();
-            }
-
-            // Save last connection
-            _conn = connection;
+            _conn = new SqliteManager().CloseConnection(shouldClose, connection);
         }
 
         private SqliteConnection _conn;
