@@ -3,7 +3,9 @@
 using AppKit;
 using Foundation;
 using System.Linq;
-using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using Mono.Data.Sqlite;
 
 namespace SittingDucks
 {
@@ -17,17 +19,22 @@ namespace SittingDucks
 
         public NSTextField[] NSTextFields { get; set; }
 
+        private SqliteConnection DatabaseConnection = null;
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            DatabaseConnection = GetDatabaseConnection();
 
             recordTable.TableColumns().ElementAt(0).HeaderCell.StringValue = "Website";
             recordTable.TableColumns().ElementAt(1).HeaderCell.StringValue = "Account";
             recordTable.TableColumns().ElementAt(2).HeaderCell.StringValue = "Password";
 
-            DataSource = new RecordTableDataSource();
-
+            DataSource = new RecordTableDataSource(DatabaseConnection);
             NSTextFields = new NSTextField[] { websiteField, accountField, passwordField };
+
+            PushView();
         }
 
         partial void newAccountButton(NSObject sender)
@@ -77,8 +84,55 @@ namespace SittingDucks
 
         void AddNewAccount(string website, string account, string password)
         {
-            DataSource.Records.Add(new Record(website, account, password));
+            DataSource.Records.Add(new Record(website, account, password, DatabaseConnection));
 
+            PushView();
+        }
+
+        partial void GeneratePasswordButton(NSObject sender)
+        {
+            passwordField.StringValue = PasswordGenerator.GeneratePassword();
+        }
+
+        private SqliteConnection GetDatabaseConnection()
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string folder = Path.Combine(appData, "SittingDucks");
+            string database = Path.Combine(folder, "database.db3");
+
+            // Create the database if it doesn't already exist
+            bool exists = File.Exists(database);
+            if (!exists)
+            {
+                DirectoryInfo directoryInfo = Directory.CreateDirectory(folder);
+                SqliteConnection.CreateFile(database);
+            }
+
+            // Create connection to the database
+            var conn = new SqliteConnection("Data Source=" + database);
+
+            // Set the structure of the database
+            if (!exists)
+            {
+                var commands = new[] {"CREATE TABLE Data (ID TEXT, Website TEXT, Account TEXT, Password TEXT)"};
+                conn.Open();
+                foreach (var cmd in commands)
+                {
+                    using (var c = conn.CreateCommand())
+                    {
+                        c.CommandText = cmd;
+                        c.CommandType = CommandType.Text;
+                        c.ExecuteNonQuery();
+                    }
+                }
+                conn.Close();
+            }
+
+            return conn;
+        }
+
+        public void PushView()
+        {
             recordTable.DataSource = DataSource;
             recordTable.Delegate = new RecordTableDelegate(DataSource);
 
@@ -89,11 +143,6 @@ namespace SittingDucks
                 textField.StringValue = string.Empty;
                 textField.BackgroundColor = NSColor.Clear;
             }
-        }
-
-        partial void GeneratePasswordButton(NSObject sender)
-        {
-            passwordField.StringValue = PasswordGenerator.GeneratePassword();
         }
 
         public override NSObject RepresentedObject
@@ -107,6 +156,14 @@ namespace SittingDucks
                 base.RepresentedObject = value;
                 // Update the view, if already loaded.
             }
+        }
+
+        public override void AwakeFromNib()
+        {
+            base.AwakeFromNib();
+
+            // Get access to database
+            DatabaseConnection = GetDatabaseConnection();
         }
     }
 }
