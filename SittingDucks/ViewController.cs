@@ -6,6 +6,7 @@ using System.Linq;
 using System.Data;
 using System.IO;
 using Mono.Data.Sqlite;
+using CoreGraphics;
 
 namespace SittingDucks
 {
@@ -26,6 +27,8 @@ namespace SittingDucks
             base.ViewDidLoad();
 
             DatabaseConnection = GetDatabaseConnection();
+
+            Authenticate(DatabaseConnection);
 
             recordTable.TableColumns().ElementAt(0).HeaderCell.StringValue = "Website";
             recordTable.TableColumns().ElementAt(1).HeaderCell.StringValue = "Account";
@@ -114,7 +117,7 @@ namespace SittingDucks
             // Set the structure of the database
             if (!exists)
             {
-                var commands = new[] {"CREATE TABLE Data (ID TEXT, Website TEXT, Account TEXT, Password TEXT)"};
+                var commands = new[] {"CREATE TABLE Data (ID TEXT, Website TEXT, Account TEXT, Password TEXT)", "CREATE TABLE System (ID TEXT, Password TEXT, INIT BOOLEAN)" };
                 conn.Open();
                 foreach (var cmd in commands)
                 {
@@ -129,6 +132,52 @@ namespace SittingDucks
             }
 
             return conn;
+        }
+
+        public void Authenticate(SqliteConnection connection)
+        {
+            bool shouldClose;
+
+            (connection, shouldClose) = new SqliteManager().OpenConnection(connection);
+
+            string password = string.Empty;
+            Guid? systemID = null;
+            bool? isInit = null;
+
+            using (var command = connection.CreateCommand())
+            {
+                // Create new command
+                command.CommandText = "SELECT * FROM [System]";
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read() && isInit != null)
+                    {
+                        // Pull values back into class
+                        systemID = new Guid((string)reader[0]);
+                        password = (string)reader[1];
+                        isInit = (bool)reader[2];                        
+                    }
+                }
+            }
+
+            var input = new NSTextField(new CGRect(0, 0, 300, 20));
+
+            var alert = new NSAlert()
+            {
+                AlertStyle = NSAlertStyle.Informational,
+                InformativeText = "Enter SittingDucks password",
+                MessageText = "Authentication Required",
+            };
+            alert.AddButton("Enter");
+            alert.AccessoryView = input;
+            alert.Layout();
+            alert.RunModal();
+
+            if (input.StringValue != password)
+            {
+                throw new Exception();
+            }
         }
 
         public void PushView()
