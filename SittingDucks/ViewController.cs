@@ -21,6 +21,7 @@ namespace SittingDucks
         public NSTextField[] NSTextFields { get; set; }
 
         private SqliteConnection DatabaseConnection = null;
+        private SqliteConnection _conn;
 
         public override void ViewDidLoad()
         {
@@ -138,7 +139,7 @@ namespace SittingDucks
         {
             bool shouldClose;
 
-            (connection, shouldClose) = new SqliteManager().OpenConnection(connection);
+            (_conn, shouldClose) = new SqliteManager().OpenConnection(connection);
 
             string password = string.Empty;
             Guid? systemID = null;
@@ -151,7 +152,7 @@ namespace SittingDucks
 
                 using (var reader = command.ExecuteReader())
                 {
-                    while (reader.Read() && isInit != null)
+                    while (reader.Read() && isInit == null)
                     {
                         // Pull values back into class
                         systemID = new Guid((string)reader[0]);
@@ -161,7 +162,7 @@ namespace SittingDucks
                 }
             }
 
-            var input = new NSTextField(new CGRect(0, 0, 300, 20));
+            var input = new NSSecureTextField(new CGRect(0, 0, 300, 20));
 
             var alert = new NSAlert()
             {
@@ -172,12 +173,17 @@ namespace SittingDucks
             alert.AddButton("Enter");
             alert.AccessoryView = input;
             alert.Layout();
-            alert.RunModal();
+            var result = alert.RunModal();
 
             if (input.StringValue != password)
             {
                 throw new Exception();
             }
+            else if (result == 1000) {
+                alert.Dispose();
+            } 
+
+            _conn = new SqliteManager().CloseConnection(shouldClose, connection);
         }
 
         public void PushView()
