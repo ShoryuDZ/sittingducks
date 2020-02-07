@@ -27,9 +27,9 @@ namespace SittingDucks
         {
             base.ViewDidLoad();
 
-            DatabaseConnection = GetDatabaseConnection();
+            DatabaseConnection = SqliteManager.GetDatabaseConnection();
 
-            Authenticate(DatabaseConnection);
+            Authenticator.Initialise(DatabaseConnection, _conn);
 
             recordTable.TableColumns().ElementAt(0).HeaderCell.StringValue = "Website";
             recordTable.TableColumns().ElementAt(1).HeaderCell.StringValue = "Account";
@@ -98,94 +98,6 @@ namespace SittingDucks
             passwordField.StringValue = PasswordGenerator.GeneratePassword();
         }
 
-        private SqliteConnection GetDatabaseConnection()
-        {
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string folder = Path.Combine(appData, "SittingDucks");
-            string database = Path.Combine(folder, "database.db3");
-
-            // Create the database if it doesn't already exist
-            bool exists = File.Exists(database);
-            if (!exists)
-            {
-                DirectoryInfo directoryInfo = Directory.CreateDirectory(folder);
-                SqliteConnection.CreateFile(database);
-            }
-
-            // Create connection to the database
-            var conn = new SqliteConnection("Data Source=" + database);
-
-            // Set the structure of the database
-            if (!exists)
-            {
-                var commands = new[] {"CREATE TABLE Data (ID TEXT, Website TEXT, Account TEXT, Password TEXT)", "CREATE TABLE System (ID TEXT, Password TEXT, INIT BOOLEAN)" };
-                conn.Open();
-                foreach (var cmd in commands)
-                {
-                    using (var c = conn.CreateCommand())
-                    {
-                        c.CommandText = cmd;
-                        c.CommandType = CommandType.Text;
-                        c.ExecuteNonQuery();
-                    }
-                }
-                conn.Close();
-            }
-
-            return conn;
-        }
-
-        public void Authenticate(SqliteConnection connection)
-        {
-            bool shouldClose;
-
-            (_conn, shouldClose) = new SqliteManager().OpenConnection(connection);
-
-            string password = string.Empty;
-            Guid? systemID = null;
-            bool? isInit = null;
-
-            using (var command = connection.CreateCommand())
-            {
-                // Create new command
-                command.CommandText = "SELECT * FROM [System]";
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read() && isInit == null)
-                    {
-                        // Pull values back into class
-                        systemID = new Guid((string)reader[0]);
-                        password = (string)reader[1];
-                        isInit = (bool)reader[2];                        
-                    }
-                }
-            }
-
-            var input = new NSSecureTextField(new CGRect(0, 0, 300, 20));
-
-            var alert = new NSAlert()
-            {
-                AlertStyle = NSAlertStyle.Informational,
-                InformativeText = "Enter SittingDucks password",
-                MessageText = "Authentication Required",
-            };
-            alert.AddButton("Enter");
-            alert.AccessoryView = input;
-            alert.Layout();
-            var result = alert.RunModal();
-
-            if (input.StringValue != password)
-            {
-                throw new Exception();
-            }
-            else if (result == 1000) {
-                alert.Dispose();
-            } 
-
-            _conn = new SqliteManager().CloseConnection(shouldClose, connection);
-        }
-
         public void PushView()
         {
             recordTable.DataSource = DataSource;
@@ -218,7 +130,7 @@ namespace SittingDucks
             base.AwakeFromNib();
 
             // Get access to database
-            DatabaseConnection = GetDatabaseConnection();
+            DatabaseConnection = SqliteManager.GetDatabaseConnection();
         }
     }
 }

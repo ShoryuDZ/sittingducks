@@ -18,7 +18,7 @@ namespace SittingDucks
             Records = new List<Record>();
             bool shouldClose;
 
-            (_conn, shouldClose) = new SqliteManager().OpenConnection(connection);
+            (_conn, shouldClose) = SqliteManager.OpenConnection(connection);
 
             // Execute query
             using (var command = connection.CreateCommand())
@@ -47,7 +47,7 @@ namespace SittingDucks
                 }
             }
 
-            _conn = new SqliteManager().CloseConnection(shouldClose, connection);
+            _conn = SqliteManager.CloseConnection(shouldClose, connection);
         }
 
         private SqliteConnection _conn;

@@ -91,6 +91,7 @@
     <Compile Include="RecordTableDelegate.cs" />
     <Compile Include="PasswordGenerator.cs" />
     <Compile Include="SqliteManager.cs" />
+    <Compile Include="Authenticator.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />

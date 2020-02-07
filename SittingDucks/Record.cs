@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using Mono.Data.Sqlite;
 
 namespace SittingDucks
@@ -33,7 +32,7 @@ namespace SittingDucks
         {
             bool shouldClose;
 
-            (_conn, shouldClose) = new SqliteManager().OpenConnection(connection);
+            (_conn, shouldClose) = SqliteManager.OpenConnection(connection);
 
             // Execute query
             using (var command = connection.CreateCommand())
@@ -51,7 +50,7 @@ namespace SittingDucks
                 command.ExecuteNonQuery();
             }
 
-            _conn = new SqliteManager().CloseConnection(shouldClose, connection);
+            _conn = SqliteManager.CloseConnection(shouldClose, connection);
         }
 
         public string Website { get; set; }
