@@ -3,10 +3,7 @@
 using AppKit;
 using Foundation;
 using System.Linq;
-using System.Data;
-using System.IO;
 using Mono.Data.Sqlite;
-using CoreGraphics;
 
 namespace SittingDucks
 {

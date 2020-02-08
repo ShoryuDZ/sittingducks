@@ -1,4 +1,6 @@
-﻿using AppKit;
+﻿using System;
+using System.Collections.Generic;
+using AppKit;
 using CoreGraphics;
 using Mono.Data.Sqlite;
 
@@ -34,19 +36,20 @@ namespace SittingDucks
 
             if (isInit == true)
             {
-                CheckPassword(password);
+                CheckPassword(connection, _conn, password);
             }
             else
             {
-                NewPassword();
+                NewPassword(connection, _conn);
             }
             
             _conn = SqliteManager.CloseConnection(shouldClose, connection);
         }
 
-        public static void CheckPassword(string password, bool isError = false)
+        public static void CheckPassword(SqliteConnection connection, SqliteConnection _conn, string password, bool isError = false)
         {
             var passwordInput = new NSSecureTextField(new CGRect(0, 0, 300, 20));
+            passwordInput.PlaceholderAttributedString = new Foundation.NSAttributedString("Enter password...");
 
             var passwordAlert = new NSAlert()
             {
@@ -64,17 +67,81 @@ namespace SittingDucks
 
             if (passwordInput.StringValue != password)
             {
-                CheckPassword(password, true);
+                CheckPassword(connection, _conn, password, true);
             }
             else if (result == 1001)
             {
-                NewPassword();
+                NewPassword(connection, _conn);
             }
         }
 
-        public static void NewPassword()
+        public static void NewPassword(SqliteConnection connection, SqliteConnection _conn)
         {
-            //Mechanism for new password coming soon
+            var newPasswordInput = new NSStackView(new CGRect(0, 0, 300, 50));
+
+            var originalPassword = new NSSecureTextField(new CGRect(0, 0, 300, 20));
+            originalPassword.PlaceholderAttributedString = new Foundation.NSAttributedString("Type new password...");
+            var confirmedPassword = new NSSecureTextField(new CGRect(0, 25, 300, 20));
+            confirmedPassword.PlaceholderAttributedString = new Foundation.NSAttributedString("Confirm password...");
+
+            newPasswordInput.AddSubview(originalPassword);
+            newPasswordInput.AddSubview(confirmedPassword);
+
+            var newPasswordAlert = new NSAlert()
+            {
+                AlertStyle = NSAlertStyle.Informational,
+                InformativeText = "Enter new password to secure SittingDucks",
+                MessageText = "Adding New Password",
+            };
+            var enterButton = newPasswordAlert.AddButton("Enter");
+            newPasswordAlert.AccessoryView = newPasswordInput;
+            newPasswordAlert.Layout();
+            var result = newPasswordAlert.RunModal();
+
+            if (result == 1000 && originalPassword.StringValue == confirmedPassword.StringValue)
+            {
+                bool shouldClose;
+
+                (_conn, shouldClose) = SqliteManager.OpenConnection(connection);
+
+                // Execute query
+                using (var command = connection.CreateCommand())
+                {
+                    // Create new command
+                    command.CommandText = "UPDATE [System] SET ID = @COL1, Password = @COL2, INIT = @COL3";
+
+                    // Populate with data from the record
+                    command.Parameters.AddWithValue("@COL1", new Guid());
+                    command.Parameters.AddWithValue("@COL2", originalPassword.StringValue);
+                    command.Parameters.AddWithValue("@COL3", true);
+
+                    // Write to database
+                    command.ExecuteNonQuery();
+                }
+
+                _conn = SqliteManager.CloseConnection(shouldClose, connection);
+
+                newPasswordAlert.Dispose();
+
+                var confirmPasswordAlert = new NSAlert()
+                {
+                    AlertStyle = NSAlertStyle.Informational,
+                    InformativeText = "Remember this password, store it somewhere safe!",
+                    MessageText = "Password sucessfully saved",
+                };
+                confirmPasswordAlert.AddButton("OK");
+                var confirmResult = confirmPasswordAlert.RunModal();
+
+                if (confirmResult == 1000)
+                {
+                    confirmPasswordAlert.Dispose();
+                }
+            }
+            else if (result == 1000 && originalPassword.StringValue != confirmedPassword.StringValue)
+            {
+                newPasswordAlert.AlertStyle = NSAlertStyle.Warning;
+                newPasswordAlert.InformativeText = "Passwords do not match";
+            }
         }
     }
 }
