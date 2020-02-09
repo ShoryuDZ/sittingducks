@@ -28,10 +28,6 @@ namespace SittingDucks
 
             Authenticator.Initialise(DatabaseConnection, _conn);
 
-            recordTable.TableColumns().ElementAt(0).HeaderCell.StringValue = "Website";
-            recordTable.TableColumns().ElementAt(1).HeaderCell.StringValue = "Account";
-            recordTable.TableColumns().ElementAt(2).HeaderCell.StringValue = "Password";
-
             DataSource = new RecordTableDataSource(DatabaseConnection);
             NSTextFields = new NSTextField[] { websiteField, accountField, passwordField };
 
@@ -98,7 +94,7 @@ namespace SittingDucks
         public void PushView()
         {
             recordTable.DataSource = DataSource;
-            recordTable.Delegate = new RecordTableDelegate(DataSource);
+            recordTable.Delegate = new RecordTableDelegate(DataSource, this);
 
             recordTable.ReloadData();
 

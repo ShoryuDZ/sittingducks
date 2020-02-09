@@ -54,7 +54,7 @@ namespace SittingDucks
             var passwordAlert = new NSAlert()
             {
                 AlertStyle = isError ? NSAlertStyle.Critical : NSAlertStyle.Informational,
-                InformativeText = isError ? "Previous password attempt was incorrect, please retry" : "Enter SittingDucks password",
+                InformativeText = isError ? "Previous password attempt was incorrect, please retry" : "Enter SittingDucks Password",
                 MessageText = "Authentication Required",
             };
             passwordAlert.AddButton("Enter");
@@ -79,9 +79,9 @@ namespace SittingDucks
         {
             var newPasswordInput = new NSStackView(new CGRect(0, 0, 300, 50));
 
-            var originalPassword = new NSSecureTextField(new CGRect(0, 0, 300, 20));
+            var originalPassword = new NSSecureTextField(new CGRect(0, 25, 300, 20));
             originalPassword.PlaceholderAttributedString = new Foundation.NSAttributedString("Type new password...");
-            var confirmedPassword = new NSSecureTextField(new CGRect(0, 25, 300, 20));
+            var confirmedPassword = new NSSecureTextField(new CGRect(0, 0, 300, 20));
             confirmedPassword.PlaceholderAttributedString = new Foundation.NSAttributedString("Confirm password...");
 
             newPasswordInput.AddSubview(originalPassword);
