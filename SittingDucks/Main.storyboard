@@ -144,10 +144,10 @@
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="100" y="676" width="480" height="270"/>
+                        <rect key="contentRect" x="100" y="676" width="750" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-                        <value key="minSize" type="size" width="700" height="250"/>
-                        <value key="maxSize" type="size" width="800" height="1000"/>
+                        <value key="minSize" type="size" width="750" height="250"/>
+                        <value key="maxSize" type="size" width="1200" height="1000"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
@@ -245,7 +245,7 @@ DQ
                                             <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn width="177" minWidth="10" maxWidth="3.4028234663852886e+38" id="0pw-0e-SA9">
+                                                <tableColumn width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="0pw-0e-SA9">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Website/Service">
                                                         <font key="font" metaFont="menu" size="11"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -278,7 +278,7 @@ DQ
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn width="174" minWidth="10" maxWidth="3.4028234663852886e+38" id="YNO-4e-9pA">
+                                                <tableColumn width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="YNO-4e-9pA">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Account Name">
                                                         <font key="font" metaFont="menu" size="11"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -311,7 +311,7 @@ DQ
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn width="191" minWidth="10" maxWidth="3.4028234663852886e+38" id="fA4-yZ-9Sb">
+                                                <tableColumn width="150" minWidth="10" maxWidth="3.4028234663852886e+38" id="fA4-yZ-9Sb">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Password">
                                                         <font key="font" metaFont="menu" size="11"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -344,7 +344,7 @@ DQ
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn width="188" minWidth="10" maxWidth="3.4028234663852886e+38" id="8YE-BC-fB5">
+                                                <tableColumn width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="8YE-BC-fB5">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Actions">
                                                         <font key="font" metaFont="menu" size="11"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>

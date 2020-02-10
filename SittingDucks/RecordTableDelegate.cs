@@ -1,6 +1,7 @@
 ﻿using System;
 using AppKit;
 using CoreGraphics;
+using Foundation;
 
 namespace SittingDucks
 {
@@ -97,6 +98,22 @@ namespace SittingDucks
                     };
 
                     view.AddSubview(showButton);
+
+                    var copyButton = new NSButton(new CGRect(140, 0, 60, 16));
+                    copyButton.Tag = row;
+                    copyButton.Cell = new NSButtonCell { BackgroundColor = NSColor.DarkGray, Title = "Copy" };
+
+                    copyButton.Activated += (sender, e) =>
+                    {
+                        var btn = sender as NSButton;
+                        var selectedRecord = DataSource.Records[(int)btn.Tag];
+
+                        var pasteboard = NSPasteboard.GeneralPasteboard;
+                        pasteboard.ClearContents();
+                        pasteboard.WriteObjects(new NSString[] { (NSString)selectedRecord.Password });
+                    };
+
+                    view.AddSubview(copyButton);
                     break;
             }
 
