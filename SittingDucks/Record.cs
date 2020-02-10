@@ -10,8 +10,9 @@ namespace SittingDucks
             this.Website = website;
             this.AccountName = accountName;
             this.Password = password;
+            this.ShowPassword = false;
 
-            if(id == default(Guid))
+            if (id == default(Guid))
             {
                 this.ID = Guid.NewGuid();
             }
@@ -57,6 +58,7 @@ namespace SittingDucks
         public string AccountName { get; set; }
         public string Password { get; set; }
         public Guid ID { get; set; }
+        public bool ShowPassword { get; set; }
 
         private SqliteConnection _conn = null;
     }

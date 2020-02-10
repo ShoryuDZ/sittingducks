@@ -12,8 +12,6 @@ namespace SittingDucks
             this.Controller = controller;
         }
 
-        private const string CellIdentifier = "RecordCell";
-
         private RecordTableDataSource DataSource;
         private ViewController Controller;
 
@@ -23,63 +21,83 @@ namespace SittingDucks
             // If the returned view is null, you instance up a new view
             // If a non-null view is returned, you modify it enough to reflect the new data
             NSTableCellView view = (NSTableCellView)tableView.MakeView(tableColumn.Title, this);
-            if (view == null)
+
+            view = new NSTableCellView();
+            var showPassword = DataSource.Records[(int)row].ShowPassword;
+
+            // Configure the view
+            view.Identifier = tableColumn.Title;
+
+            // Take action based on title
+            switch (tableColumn.Title)
             {
-                view = new NSTableCellView();
+                case "Website/Service":
+                case "Account Name":
+                    view.TextField = new NSTextField(new CGRect(0, 0, 400, 16));
+                    ConfigureTextField(view, row);
+                    break;
+                case "Password":
+                    view.TextField = showPassword ? new NSTextField(new CGRect(0, 0, 400, 16)) : new NSSecureTextField(new CGRect(0, 0, 400, 16));
+                    ConfigureTextField(view, row);
+                    break;
+                case "Actions":
+                    // Create new button
+                    var removeButton = new NSButton(new CGRect(0, 0, 60, 16));
+                    removeButton.Tag = row;
+                    removeButton.Bordered = false;
+                    removeButton.Cell = new NSButtonCell { BackgroundColor = NSColor.DarkGray, Title = "Remove" };
 
-                // Configure the view
-                view.Identifier = tableColumn.Title;
+                    // Wireup events
+                    removeButton.Activated += (sender, e) =>
+                    {
+                        // Get button and product
+                        var btn = sender as NSButton;
+                        var record = DataSource.Records[(int)btn.Tag];
+                        var connection = SqliteManager.GetDatabaseConnection();
 
-                // Take action based on title
-                switch (tableColumn.Title)
-                {
-                    case "Website/Service":
-                    case "Account Name":
-                    case "Password":
-                        view.TextField = new NSTextField(new CGRect(0, 0, 400, 16));
-                        ConfigureTextField(view, row);
-                        break;
-                    case "Delete":
-                        // Create new button
-                        var button = new NSButton(new CGRect(0, 0, 20, 16));
-                        button.Tag = row;
-                        button.Bordered = false;
-                        button.Cell = new NSButtonCell { BackgroundColor = NSColor.DarkGray, Title = "-" };
-
-                        // Wireup events
-                        button.Activated += (sender, e) =>
+                        // Configure alert
+                        var alert = new NSAlert()
                         {
-                            // Get button and product
-                            var btn = sender as NSButton;
-                            var record = DataSource.Records[(int)btn.Tag];
-                            var connection = SqliteManager.GetDatabaseConnection();
-
-                            // Configure alert
-                            var alert = new NSAlert()
-                            {
-                                AlertStyle = NSAlertStyle.Informational,
-                                InformativeText = $"Are you sure you want to delete data for {record.Website}? This operation cannot be undone.",
-                                MessageText = $"Delete data for {record.Website}?",
-                            };
-                            alert.AddButton("Cancel");
-                            alert.AddButton("Delete");
-                            alert.BeginSheetForResponse(Controller.View.Window, (result) =>
-                            {
-                                // Should we delete the requested row?
-                                if (result == 1001)
-                                {
-                                    // Remove the given row from the dataset
-                                    DataSource.RemoveRecord(record, connection);
-                                    Controller.PushView();
-                                }
-                            });
+                            AlertStyle = NSAlertStyle.Informational,
+                            InformativeText = $"Are you sure you want to delete data for {record.Website}? This operation cannot be undone.",
+                            MessageText = $"Delete data for {record.Website}?",
                         };
+                        alert.AddButton("Cancel");
+                        alert.AddButton("Delete");
+                        alert.BeginSheetForResponse(Controller.View.Window, (result) =>
+                        {
+                            // Should we delete the requested row?
+                            if (result == 1001)
+                            {
+                                // Remove the given row from the dataset
+                                DataSource.RemoveRecord(record, connection);
+                                Controller.PushView();
+                            }
+                        });
+                    };
 
-                        // Add to view
-                        view.AddSubview(button);
-                        break;
-                }
+                    view.AddSubview(removeButton);
 
+                    var showButton = new NSButton(new CGRect(70, 0, 60, 16));
+                    showButton.Tag = row;
+                    showButton.Cell = new NSButtonCell { BackgroundColor = NSColor.DarkGray, Title = showPassword ? "Hide" : "Show" };
+
+                    showButton.Activated += (sender, e) =>
+                    {
+                        var btn = sender as NSButton;
+                        var selectedRecord = DataSource.Records[(int)btn.Tag];
+
+                        foreach (var record in DataSource.Records)
+                        {
+                            record.ShowPassword = false;
+                        }
+
+                        selectedRecord.ShowPassword = showPassword ? false : true;
+                        Controller.PushView();
+                    };
+
+                    view.AddSubview(showButton);
+                    break;
             }
 
             // Setup view based on the column selected
@@ -94,7 +112,7 @@ namespace SittingDucks
                 case "Password":
                     view.TextField.StringValue = DataSource.Records[(int)row].Password;
                     break;
-                case "Delete":
+                case "Actions":
                     foreach (NSView subview in view.Subviews)
                     {
                         var btn = subview as NSButton;
@@ -120,24 +138,6 @@ namespace SittingDucks
             view.TextField.Bordered = false;
             view.TextField.Selectable = true;
             view.TextField.Editable = false;
-
-            // Wireup events
-            view.TextField.EditingEnded += (sender, e) => {
-
-                // Take action based on type
-                switch (view.Identifier)
-                {
-                    case "Website/Service":
-                        DataSource.Records[(int)row].Website = view.TextField.StringValue;
-                        break;
-                    case "Account Name":
-                        DataSource.Records[(int)row].AccountName = view.TextField.StringValue;
-                        break;
-                    case "Password":
-                        DataSource.Records[(int)row].Password = view.TextField.StringValue;
-                        break;
-                }
-            };
 
             // Tag view
             view.TextField.Tag = row;
