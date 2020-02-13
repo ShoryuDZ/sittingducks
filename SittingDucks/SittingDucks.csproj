@@ -92,6 +92,7 @@
     <Compile Include="PasswordGenerator.cs" />
     <Compile Include="SqliteManager.cs" />
     <Compile Include="Authenticator.cs" />
+    <Compile Include="EncryptionTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
