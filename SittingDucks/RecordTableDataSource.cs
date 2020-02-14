@@ -32,9 +32,9 @@ namespace SittingDucks
                     {
                         // Pull values back into class
                         var ID = (string)reader[0];
-                        var website = EncryptionTool.Decrypt((string)reader[1]);
-                        var account = EncryptionTool.Decrypt((string)reader[2]);
-                        var password = EncryptionTool.Decrypt((string)reader[3]);
+                        var website = EncryptionTool.Decrypt((string)reader[1], EncryptionPassword);
+                        var account = EncryptionTool.Decrypt((string)reader[2], EncryptionPassword);
+                        var password = EncryptionTool.Decrypt((string)reader[3], EncryptionPassword);
                         if (Records.Any(x => x.ID.ToString() == ID))
                         {
                             break;
@@ -74,6 +74,7 @@ namespace SittingDucks
         }
 
         private SqliteConnection _conn;
+        private string EncryptionPassword = "abc123";
 
         public List<Record> Records { get; set; }
 
