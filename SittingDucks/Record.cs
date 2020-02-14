@@ -43,9 +43,9 @@ namespace SittingDucks
 
                 // Populate with data from the record
                 command.Parameters.AddWithValue("@COL1", ID.ToString());
-                command.Parameters.AddWithValue("@COL2", EncryptionTool.Encrypt(Website, EncryptionPassword));
-                command.Parameters.AddWithValue("@COL3", EncryptionTool.Encrypt(AccountName, EncryptionPassword));
-                command.Parameters.AddWithValue("@COL4", EncryptionTool.Encrypt(Password, EncryptionPassword));
+                command.Parameters.AddWithValue("@COL2", EncryptionTool.Encrypt(Website));
+                command.Parameters.AddWithValue("@COL3", EncryptionTool.Encrypt(AccountName));
+                command.Parameters.AddWithValue("@COL4", EncryptionTool.Encrypt(Password));
 
                 // Write to database
                 command.ExecuteNonQuery();
@@ -61,6 +61,5 @@ namespace SittingDucks
         public bool ShowPassword { get; set; }
 
         private SqliteConnection _conn = null;
-        private string EncryptionPassword = "abc123";
     }
 }
