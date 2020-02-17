@@ -16,13 +16,14 @@ namespace SittingDucks
         private const int Keysize = 256;
 
         // This constant determines the number of iterations for the password bytes generation function.
-        private const int DerivationIterations = 4096;
+        private const int DerivationIterations = 1000;
 
         public static string Encrypt(string plainText)
         {
+            var passPhrase = "ABCDabcd1234";
+
             // Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
             // so that the same Salt and IV values can be used when decrypting.  
-            var passPhrase = "ABCDabcd1234";
             var saltStringBytes = Generate256BitsOfRandomEntropy();
             var ivStringBytes = Generate256BitsOfRandomEntropy();
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
