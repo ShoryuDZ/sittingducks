@@ -28,7 +28,7 @@ namespace SittingDucks
                     while (reader.Read() && isInit == null)
                     {
                         // Pull values back into class
-                        password = EncryptionTool.Decrypt((string)reader[1]);
+                        password = (string)reader[1];
                         isInit = (bool)reader[2];
                     }
                 }
@@ -112,7 +112,7 @@ namespace SittingDucks
 
                     // Populate with data from the record
                     command.Parameters.AddWithValue("@COL1", new Guid());
-                    command.Parameters.AddWithValue("@COL2", EncryptionTool.Encrypt(originalPassword.StringValue));
+                    command.Parameters.AddWithValue("@COL2", originalPassword.StringValue);
                     command.Parameters.AddWithValue("@COL3", true);
 
                     // Write to database
