@@ -1,13 +1,24 @@
-﻿using AppKit;
+using System;
+using System.IO;
+using AppKit;
 using Foundation;
 
 namespace SittingDucks
 {
     [Register("AppDelegate")]
-    public class AppDelegate : NSApplicationDelegate
+    public partial class AppDelegate : NSApplicationDelegate
     {
         public AppDelegate()
         {
+        }
+
+        partial void HelpButton(NSObject sender)
+        {
+            string applicationDirectory = Directory.GetCurrentDirectory();
+            string myFile = Path.Combine(applicationDirectory, "help.html");
+            string helpFile = "file:///" + myFile;
+
+            System.Diagnostics.Process.Start(helpFile);
         }
 
         public override void DidFinishLaunching(NSNotification notification)
