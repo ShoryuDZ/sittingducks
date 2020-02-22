@@ -94,6 +94,9 @@ namespace SittingDucks
                 MessageText = "Adding New Password",
             };
             var enterButton = newPasswordAlert.AddButton("Enter");
+            originalPassword.NextKeyView = confirmedPassword;
+            confirmedPassword.NextKeyView = enterButton;
+
             newPasswordAlert.AccessoryView = newPasswordInput;
             newPasswordAlert.Layout();
             var result = newPasswordAlert.RunModal();

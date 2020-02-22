@@ -20,7 +20,7 @@ namespace SittingDucks
 
         public static string Encrypt(string plainText)
         {
-            var passPhrase = "ABCDabcd1234";
+            var passPhrase = "ABCDdcba1234";
 
             // Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
             // so that the same Salt and IV values can be used when decrypting.  

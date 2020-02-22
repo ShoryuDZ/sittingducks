@@ -118,7 +118,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                                     <items>
-                                        <menuItem title="SittingDucks Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                                        <menuItem title="SittingDucks Help Page" keyEquivalent="?" id="FKE-Sm-Kum">
                                             <connections>
                                                 <action selector="HelpButton:" target="Voe-Tx-rLC" id="sYz-Ml-kwq"/>
                                             </connections>
