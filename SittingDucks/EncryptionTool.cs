@@ -59,7 +59,7 @@ namespace SittingDucks
 
         public static string Decrypt(string cipherText)
         {
-            var passPhrase = "ABCDabcd1234";
+            var passPhrase = "ABCDdcba1234";
 
             // Get the complete stream of bytes that represent:
             // [32 bytes of Salt] + [32 bytes of IV] + [n bytes of CipherText]
