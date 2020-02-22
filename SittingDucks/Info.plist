@@ -28,5 +28,7 @@
 	<string>Main</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>CFBundleIconFile</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
 </dict>
 </plist>
