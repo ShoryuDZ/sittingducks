@@ -36,8 +36,8 @@ namespace SittingDucks
 
         public static SqliteConnection GetDatabaseConnection()
         {
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string folder = Path.Combine(appData, "SittingDucks");
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string folder = Path.Combine(appData, "sitting-ducks");
             string database = Path.Combine(folder, "database.db3");
 
             // Create the database if it doesn't already exist
