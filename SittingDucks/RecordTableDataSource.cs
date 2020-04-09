@@ -32,9 +32,9 @@ namespace SittingDucks
                     {
                         // Pull values back into class
                         var ID = (string)reader[0];
-                        var website = EncryptionTool.Decrypt((string)reader[1]);
-                        var account = EncryptionTool.Decrypt((string)reader[2]);
-                        var password = EncryptionTool.Decrypt((string)reader[3]);
+                        var website = EncryptionTool.Decrypt((byte[])reader[1]);
+                        var account = EncryptionTool.Decrypt((byte[])reader[2]);
+                        var password = EncryptionTool.Decrypt((byte[])reader[3]);
                         if (Records.Any(x => x.ID.ToString() == ID))
                         {
                             break;

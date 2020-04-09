@@ -37,7 +37,7 @@ namespace SittingDucks
         public static SqliteConnection GetDatabaseConnection()
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string folder = Path.Combine(appData, "sitting-ducks");
+            string folder = Path.Combine(appData, "SittingDucks");
             string database = Path.Combine(folder, "database.db3");
 
             // Create the database if it doesn't already exist
@@ -54,7 +54,7 @@ namespace SittingDucks
             // Set the structure of the database
             if (!exists)
             {
-                var commands = new[] { "CREATE TABLE Data (ID TEXT, Website TEXT, Account TEXT, Password TEXT)", "CREATE TABLE System (ID TEXT, Password TEXT, INIT BOOLEAN)", "INSERT INTO [System] (ID, Password, INIT) VALUES ('', '', false)" };
+                var commands = new[] { "CREATE TABLE Data (ID TEXT, Website BLOB, Account BLOB, Password BLOB)", "CREATE TABLE System (ID TEXT, Password TEXT, INIT BOOLEAN)", "INSERT INTO [System] (ID, Password, INIT) VALUES ('', '', false)" };
                 conn.Open();
                 foreach (var cmd in commands)
                 {
