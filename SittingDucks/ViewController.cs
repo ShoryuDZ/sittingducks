@@ -105,6 +105,13 @@ namespace SittingDucks
             }
         }
 
+        public void RefillRecord(Record record)
+        {
+            websiteField.StringValue = record.Website;
+            accountField.StringValue = record.AccountName;
+            passwordField.StringValue = record.Password;
+        }
+
         public override NSObject RepresentedObject
         {
             get

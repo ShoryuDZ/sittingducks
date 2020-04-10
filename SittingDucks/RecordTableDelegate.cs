@@ -114,6 +114,22 @@ namespace SittingDucks
                     };
 
                     view.AddSubview(copyButton);
+
+                    var editButton = new NSButton(new CGRect(210, 0, 60, 16));
+                    editButton.Tag = row;
+                    editButton.Cell = new NSButtonCell { BackgroundColor = NSColor.DarkGray, Title = "Edit" };
+
+                    editButton.Activated += (sender, e) =>
+                    {
+                        var btn = sender as NSButton;
+                        var selectedRecord = DataSource.Records[(int)btn.Tag];
+                        var connection = SqliteManager.GetDatabaseConnection();
+
+                        Controller.RefillRecord(selectedRecord);
+                        DataSource.RemoveRecord(selectedRecord, connection);
+                    };
+
+                    view.AddSubview(editButton);
                     break;
             }
 
