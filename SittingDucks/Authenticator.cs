@@ -15,7 +15,7 @@ namespace SittingDucks
 
             (_conn, shouldClose) = SqliteManager.OpenConnection(connection);
 
-            string password = string.Empty;
+            byte[] encryptedPassword = { };
             bool? isInit = null;
 
             using (var command = connection.CreateCommand())
@@ -28,11 +28,13 @@ namespace SittingDucks
                     while (reader.Read() && isInit == null)
                     {
                         // Pull values back into class
-                        password = (string)reader[1];
+                        encryptedPassword = (byte[])reader[1];
                         isInit = (bool)reader[2];
                     }
                 }
             }
+
+            var password = EncryptionTool.Decrypt(encryptedPassword);
 
             if (isInit == true)
             {
@@ -104,6 +106,7 @@ namespace SittingDucks
             if (result == 1000 && originalPassword.StringValue == confirmedPassword.StringValue)
             {
                 bool shouldClose;
+                var encryptedPassword = EncryptionTool.Encrypt(originalPassword.StringValue);
 
                 (_conn, shouldClose) = SqliteManager.OpenConnection(connection);
 
@@ -115,7 +118,7 @@ namespace SittingDucks
 
                     // Populate with data from the record
                     command.Parameters.AddWithValue("@COL1", new Guid());
-                    command.Parameters.AddWithValue("@COL2", originalPassword.StringValue);
+                    command.Parameters.AddWithValue("@COL2", encryptedPassword);
                     command.Parameters.AddWithValue("@COL3", true);
 
                     // Write to database
@@ -129,7 +132,7 @@ namespace SittingDucks
                 var confirmPasswordAlert = new NSAlert()
                 {
                     AlertStyle = NSAlertStyle.Informational,
-                    InformativeText = "Remember this password, store it somewhere safe!",
+                    InformativeText = "Remember this password, store it somewhere safe! You will not be able to recover it if lost.",
                     MessageText = "Password sucessfully saved",
                 };
                 confirmPasswordAlert.AddButton("OK");
