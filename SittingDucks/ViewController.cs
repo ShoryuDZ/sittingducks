@@ -20,6 +20,8 @@ namespace SittingDucks
         private SqliteConnection DatabaseConnection = null;
         private SqliteConnection _conn;
 
+        public nint? indexToEdit = null;
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -38,7 +40,7 @@ namespace SittingDucks
         {
             if (websiteField.StringValue != string.Empty && accountField.StringValue != string.Empty && PasswordGenerator.IsSecure(passwordField.StringValue))
             {
-                AddNewAccount(websiteField.StringValue, accountField.StringValue, passwordField.StringValue);
+                AddNewAccount(websiteField.StringValue, accountField.StringValue, passwordField.StringValue, indexToEdit);
             }
 
             else
@@ -73,15 +75,16 @@ namespace SittingDucks
                     }
                     if (result == 1001)
                     {
-                        AddNewAccount(websiteField.StringValue, accountField.StringValue, passwordField.StringValue);
+                        AddNewAccount(websiteField.StringValue, accountField.StringValue, passwordField.StringValue, indexToEdit);
                     }
                 }
             }
         }
 
-        void AddNewAccount(string website, string account, string password)
+        void AddNewAccount(string website, string account, string password, nint? index = null)
         {
-            DataSource.Records.Add(new Record(website, account, password, DatabaseConnection));
+            DataSource.AddRecord(new Record(website, account, password, DatabaseConnection), index);
+            indexToEdit = null;
 
             PushView();
         }
@@ -103,13 +106,18 @@ namespace SittingDucks
                 textField.StringValue = string.Empty;
                 textField.BackgroundColor = NSColor.Clear;
             }
+
+            NewAccountButton.Title = "Create New Record";
         }
 
-        public void RefillRecord(Record record)
+        public void RefillRecord(Record record, nint index)
         {
+            NewAccountButton.Title = "Edit Record";
             websiteField.StringValue = record.Website;
             accountField.StringValue = record.AccountName;
             passwordField.StringValue = record.Password;
+
+            indexToEdit = index;
         }
 
         public override NSObject RepresentedObject

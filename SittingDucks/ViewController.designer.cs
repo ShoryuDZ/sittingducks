@@ -16,6 +16,9 @@ namespace SittingDucks
 		AppKit.NSTextField accountField { get; set; }
 
 		[Outlet]
+		AppKit.NSButtonCell NewAccountButton { get; set; }
+
+		[Outlet]
 		AppKit.NSSecureTextField passwordField { get; set; }
 
 		[Outlet]
@@ -40,6 +43,11 @@ namespace SittingDucks
 			if (passwordField != null) {
 				passwordField.Dispose ();
 				passwordField = null;
+			}
+
+			if (NewAccountButton != null) {
+				NewAccountButton.Dispose ();
+				NewAccountButton = null;
 			}
 
 			if (recordTable != null) {

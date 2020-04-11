@@ -125,7 +125,7 @@ namespace SittingDucks
                         var selectedRecord = DataSource.Records[(int)btn.Tag];
                         var connection = SqliteManager.GetDatabaseConnection();
 
-                        Controller.RefillRecord(selectedRecord);
+                        Controller.RefillRecord(selectedRecord, btn.Tag);
                         DataSource.RemoveRecord(selectedRecord, connection);
                     };
 

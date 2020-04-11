@@ -50,6 +50,18 @@ namespace SittingDucks
             _conn = SqliteManager.CloseConnection(shouldClose, connection);
         }
 
+        public void AddRecord(Record record, nint? index)
+        {
+            if (index.HasValue)
+            {
+                Records.Insert((int)index.Value, record);
+            }
+            else
+            {
+                Records.Add(record);
+            }
+        }
+
         public void RemoveRecord(Record record, SqliteConnection connection)
         {
             Records.Remove(record);
