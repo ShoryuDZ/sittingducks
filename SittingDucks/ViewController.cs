@@ -81,6 +81,11 @@ namespace SittingDucks
             }
         }
 
+        partial void searchButton(NSObject sender)
+        {
+            var query = SearchTool.RunSearch();
+        }
+
         void AddNewAccount(string website, string account, string password, nint? index = null)
         {
             DataSource.AddRecord(new Record(website, account, password, DatabaseConnection), index);
