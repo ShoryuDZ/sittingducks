@@ -83,7 +83,10 @@ namespace SittingDucks
 
         partial void searchButton(NSObject sender)
         {
-            var query = SearchTool.RunSearch();
+            var query = SearchTool.RunSearchWindow();
+            DataSource = query != String.Empty ? SearchTool.SearchSource(DataSource, query) : new RecordTableDataSource(DatabaseConnection);
+
+            PushView();
         }
 
         void AddNewAccount(string website, string account, string password, nint? index = null)

@@ -13,6 +13,11 @@ namespace SittingDucks
             Records = new List<Record>();
         }
 
+        public RecordTableDataSource(List<Record> records)
+        {
+            Records = records;
+        }
+
         public RecordTableDataSource(SqliteConnection connection)
         {
             Records = new List<Record>();
