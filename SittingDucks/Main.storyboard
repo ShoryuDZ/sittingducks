@@ -141,7 +141,7 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
+                <windowController id="B8D-0N-5wS" customClass="WindowController" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -149,11 +149,37 @@
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <value key="minSize" type="size" width="750" height="250"/>
                         <value key="maxSize" type="size" width="1200" height="1000"/>
+                        <toolbar key="toolbar" implicitIdentifier="85FD9809-894E-40E1-9D94-BFBB372AFB1D" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="P6K-pr-Dgj">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="xU9-XD-F5M"/>
+                                <toolbarItem implicitItemIdentifier="D56DA405-227D-43FB-A3F4-8FB3F97F25DB" label="Search" paletteLabel="Search" tag="-1" image="NSRevealFreestandingTemplate" id="oHX-lr-CjO">
+                                    <size key="minSize" width="14" height="14"/>
+                                    <size key="maxSize" width="14" height="14"/>
+                                    <connections>
+                                        <action selector="SearchButtonToolbar:" target="B8D-0N-5wS" id="lbE-tx-jse"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="6F5A6B3D-62A5-410C-93AF-039CBC03E88A" label="Remove Filter" paletteLabel="Remove Filter" tag="-1" image="NSStopProgressFreestandingTemplate" id="SE7-Z8-peW">
+                                    <size key="minSize" width="14" height="14"/>
+                                    <size key="maxSize" width="14" height="14"/>
+                                    <connections>
+                                        <action selector="RemoveFiltersButton:" target="B8D-0N-5wS" id="ZZW-5J-Quf"/>
+                                    </connections>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="xU9-XD-F5M"/>
+                                <toolbarItem reference="SE7-Z8-peW"/>
+                                <toolbarItem reference="oHX-lr-CjO"/>
+                            </defaultToolbarItems>
+                        </toolbar>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
                     </window>
                     <connections>
+                        <outlet property="RemoveFiltersButton" destination="SE7-Z8-peW" id="B0L-n1-64T"/>
+                        <outlet property="SearchToolbarButton" destination="oHX-lr-CjO" id="r1E-Lb-PXS"/>
                         <segue destination="XfG-lQ-9wD" kind="relationship" relationship="window.shadowedContentViewController" id="cq2-FE-JQM"/>
                     </connections>
                 </windowController>
@@ -170,7 +196,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8rL-LZ-WAo">
-                                <rect key="frame" x="22" y="283" width="516" height="32"/>
+                                <rect key="frame" x="22" y="283" width="826" height="32"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NdL-kw-I3n">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -411,22 +437,10 @@ DQ
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K8N-4d-mHZ">
-                                <rect key="frame" x="540" y="289" width="302" height="23"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="roundTextured" title="Search" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zJ3-Ef-GsN">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="searchButton:" target="XfG-lQ-9wD" id="0Dd-rh-Nf6"/>
-                                </connections>
-                            </button>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="NewAccountButton" destination="NdL-kw-I3n" id="vXj-3c-Ey2"/>
-                        <outlet property="SearchButton" destination="K8N-4d-mHZ" id="Bmg-xf-VRa"/>
                         <outlet property="accountField" destination="nrN-Td-xNJ" id="ySl-Dm-odD"/>
                         <outlet property="passwordField" destination="85O-OU-c7h" id="VTw-Yl-iKv"/>
                         <outlet property="recordTable" destination="ZGC-ch-Vhy" id="bot-ye-fRK"/>
@@ -438,4 +452,8 @@ DQ
             <point key="canvasLocation" x="98" y="770.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSRevealFreestandingTemplate" width="14" height="14"/>
+        <image name="NSStopProgressFreestandingTemplate" width="14" height="14"/>
+    </resources>
 </document>

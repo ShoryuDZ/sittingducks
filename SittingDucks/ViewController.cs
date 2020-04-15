@@ -14,7 +14,6 @@ namespace SittingDucks
         }
 
         public RecordTableDataSource DataSource { get; set; }
-        public bool SearchExecuted { get; set; }
 
         public NSTextField[] NSTextFields { get; set; }
 
@@ -33,7 +32,6 @@ namespace SittingDucks
 
             DataSource = new RecordTableDataSource(DatabaseConnection);
             NSTextFields = new NSTextField[] { websiteField, accountField, passwordField };
-            SearchExecuted = false;
 
             PushView();
         }
@@ -83,12 +81,15 @@ namespace SittingDucks
             }
         }
 
-        partial void searchButton(NSObject sender)
+        public void RemoveFilters()
         {
-            var query = !SearchExecuted ? SearchTool.RunSearchWindow() : String.Empty;
-            bool runSearch = query != String.Empty;
+            DataSource = new RecordTableDataSource(DatabaseConnection);
+            PushView();
+        }
 
-            (DataSource, SearchExecuted) = runSearch ? SearchTool.SearchSource(DataSource, query) : (new RecordTableDataSource(DatabaseConnection), false);
+        public void Search(string query)
+        {
+            DataSource = SearchTool.SearchSource(DataSource, query);
             PushView();
         }
 
@@ -96,7 +97,6 @@ namespace SittingDucks
         {
             DataSource.AddRecord(new Record(website, account, password, DatabaseConnection), index);
             indexToEdit = null;
-            SearchExecuted = false;
 
             PushView();
         }
@@ -120,7 +120,6 @@ namespace SittingDucks
             }
 
             NewAccountButton.Title = "Create New Record";
-            SearchButton.Title = SearchExecuted ? "Clear Search" : "Search";
         }
 
         public void RefillRecord(Record record, nint index)

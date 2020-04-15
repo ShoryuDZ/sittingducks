@@ -3,15 +3,15 @@ using AppKit;
 using CoreGraphics;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SittingDucks
 {
     public static class SearchTool
     {
-        public static string RunSearchWindow()
+        public static async Task<string> RunSearchWindow(NSWindow window)
         {
             var searchQuery = new NSSearchField(new CGRect(0, 0, 300, 20));
-
             var searchAlert = new NSAlert()
             {
                 AlertStyle = NSAlertStyle.Informational,
@@ -25,20 +25,18 @@ namespace SittingDucks
             searchAlert.Layout();
 
             subissionButton.Enabled = false;
+
             searchQuery.Changed += (sender, e) =>
             {
                 subissionButton.Enabled = searchQuery.StringValue != String.Empty;
             };
 
-            var result = searchAlert.RunModal();
-
-
-            searchAlert.Dispose();
+            var result = (long)await searchAlert.BeginSheetAsync(window);
 
             return result == 1000 ? searchQuery.StringValue : String.Empty;
         }
 
-        public static (RecordTableDataSource, bool) SearchSource(RecordTableDataSource dataSource, string query)
+        public static RecordTableDataSource SearchSource(RecordTableDataSource dataSource, string query)
         {
             var searchData = new RecordTableDataSource(dataSource.Records.Where(x => x.Website.Contains(query, StringComparison.InvariantCultureIgnoreCase) || x.AccountName.Contains(query, StringComparison.InvariantCultureIgnoreCase)).ToList());
 
@@ -52,10 +50,10 @@ namespace SittingDucks
 
                 searchAlert.RunModal();
 
-                return (dataSource, false);
+                return dataSource;
             }
 
-            return (searchData, true);
+            return searchData;
         }
     }
 }
