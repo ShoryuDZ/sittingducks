@@ -24,6 +24,7 @@ namespace SittingDucks
         public override void DidFinishLaunching(NSNotification notification)
         {
             // Insert code here to initialize your application
+            // APPDELEGATE DFL not required
         }
 
         public override void WillTerminate(NSNotification notification)
